@@ -7,7 +7,8 @@ flowchart LR
   C["telemetry_client\n(RPC caller)"]
   S["telemetry_server\n(reads /proc/*)"]
 
-  C -->|GetSystemMetrics()\ngRPC :50051| S
+  C -->|GetSystemMetrics()| S
+  C -.->|gRPC port 50051| S
   S -->|MetricsResponse| C
 ```
 
