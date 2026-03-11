@@ -1,0 +1,56 @@
+// metrics.proto
+// API contract for the Telemetry Monitoring Microservice.
+// Defines the MetricsService and the messages used for system metric collection.
+
+syntax = "proto3";
+
+package telemetry;
+
+// ─────────────────────────────────────────────────────────────
+// Request message sent by the client to ask for system metrics.
+// The optional client_id field lets the server log which client
+// is calling, useful in multi-tenant or debugging scenarios.
+// ─────────────────────────────────────────────────────────────
+message MetricsRequest {
+  string client_id = 1;  // Optional: identifier of the requesting client
+}
+
+// ─────────────────────────────────────────────────────────────
+// Response message returned by the server containing a snapshot
+// of the host machine's current system metrics.
+// ─────────────────────────────────────────────────────────────
+message MetricsResponse {
+  // CPU utilisation as a percentage (0.0 – 100.0)
+  double cpu_usage_percent    = 1;
+
+  // Memory utilisation as a percentage (0.0 – 100.0)
+  double memory_usage_percent = 2;
+
+  // Disk utilisation of the root filesystem as a percentage (0.0 – 100.0)
+  double disk_usage_percent   = 3;
+
+  // Total installed RAM in mebibytes
+  uint64 total_memory_mb      = 4;
+
+  // RAM currently in use (total − available) in mebibytes
+  uint64 used_memory_mb       = 5;
+
+  // Total capacity of the root filesystem in gibibytes
+  uint64 total_disk_gb        = 6;
+
+  // Used space on the root filesystem in gibibytes
+  uint64 used_disk_gb         = 7;
+
+  // ISO-8601-style timestamp when the sample was taken ("YYYY-MM-DD HH:MM:SS")
+  string timestamp            = 8;
+}
+
+// ─────────────────────────────────────────────────────────────
+// MetricsService exposes a single unary RPC that returns a
+// point-in-time snapshot of the host's system metrics.
+// ─────────────────────────────────────────────────────────────
+service MetricsService {
+  // GetSystemMetrics samples CPU, memory, and disk usage and
+  // returns them in a single structured MetricsResponse.
+  rpc GetSystemMetrics(MetricsRequest) returns (MetricsResponse);
+}
