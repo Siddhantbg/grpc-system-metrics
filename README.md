@@ -2,11 +2,13 @@
 
 A lightweight Telemetry Monitoring Microservice written in **C++17** that collects real-time system metrics from a Linux machine and exposes them over **gRPC**.
 
-```
-┌─────────────────────────┐          gRPC (port 50051)          ┌──────────────────────────┐
-│   telemetry_client      │  ──── GetSystemMetrics() ──────►   │   telemetry_server       │
-│   (RPC caller)          │  ◄─── MetricsResponse ──────────   │   (reads /proc/*)        │
-└─────────────────────────┘                                      └──────────────────────────┘
+```mermaid
+flowchart LR
+  C["telemetry_client\n(RPC caller)"]
+  S["telemetry_server\n(reads /proc/*)"]
+
+  C -->|GetSystemMetrics()\ngRPC :50051| S
+  S -->|MetricsResponse| C
 ```
 
 ## Features
