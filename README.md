@@ -3,13 +3,14 @@
 A lightweight Telemetry Monitoring Microservice written in **C++17** that collects real-time system metrics from a Linux machine and exposes them over **gRPC**.
 
 ```mermaid
-flowchart LR
-  C["telemetry_client\n(RPC caller)"]
-  S["telemetry_server\n(reads /proc/*)"]
-
-  C -->|GetSystemMetrics()| S
-  C -.->|gRPC port 50051| S
-  S -->|MetricsResponse| C
+graph LR;
+  C[telemetry_client];
+  S[telemetry_server];
+  C -->|GetSystemMetrics| S;
+  S -->|MetricsResponse| C;
+  P[(Port 50051)];
+  C -. gRPC .-> P;
+  P -. gRPC .-> S;
 ```
 
 ## Features
